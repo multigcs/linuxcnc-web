@@ -17,7 +17,10 @@ html,body,h1,h2,h3,h4,h5 {
 
 }
 
-
+#mdi_commands {
+    min-height: 200px;
+    background: #EFEFEF;
+}
 
 .error {
     background: #EF9999;
@@ -26,16 +29,12 @@ html,body,h1,h2,h3,h4,h5 {
     background: #EFEF99;
 }
 
-
 #gcode{
     height: 200px;
     overflow: scroll;
     
     background-image: -webkit-linear-gradient(top, #EEEEEE, #999999);
 }
-
-         
-
 
 .oo_button{
     background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
@@ -264,8 +263,6 @@ html,body,h1,h2,h3,h4,h5 {
               <button class="tablinks ltablinks" onclick="openlTab(event, 'MDI')">MDI</button>
             </div>
             <div id="ManualControl" class="tabcontent ltabcontent ldefaultOpen">
-
-
                 <div v-for="(value, axis) in position">
                     [[axis]] :
                     <button v-on:mouseup="JogStop([[axis]])" v-on:mousedown="JogStart([[axis]], -100)">-</button>
@@ -280,14 +277,18 @@ html,body,h1,h2,h3,h4,h5 {
                     <button v-on:mousedown="SpindleStart([[num]])">STOP</button>
                     <button v-on:mousedown="SpindleFfw([[num]])">↷</button>
                 </div>
-
             </div>
+
             <div id="MDI" class="tabcontent ltabcontent">
+                <b>History:</b>
+                <div id="mdi_commands">
+                    <div v-for="mdi_command in mdi_commands" onClick="setMDI(this);">[[ mdi_command ]]</div>
+                </div>
+                <br/>
                 <b>MDI-Command:</b>
-                <input type="text" id="mdi_command" name="fname">
+                <input @keyup.enter="mdiCommand" type="text" id="mdi_command" name="fname">
                 <button v-on:mousedown="mdiCommand()">Go</button>
             </div>
-
 
             <table>
                 <body>
@@ -296,24 +297,18 @@ html,body,h1,h2,h3,h4,h5 {
                         <td valign="right"><B>[[ feedrate ]] %</B></td>
                         <td><input type="range" min="0.0" max="100.0" value="[[ feedrate ]]" v-model="feedrate" step="1.0" class="slider" v-model="sliderVal" @change="feedrateChange"></td>
                     </tr>
-
                     <tr>
                         <td><B>Rapid-Override</B></td>
                         <td valign="right"><B>[[ rapidrate ]] %</B></td>
                         <td><input type="range" min="0.0" max="100.0" value="[[ rapidrate ]]" v-model="rapidrate" step="1.0" class="slider" v-model="sliderVal" @change="rapidrateChange"></td>
                     </tr>
-
-
                     <tr v-for="(value, num) in spindle">
                         <td><B>Spindle[[ num ]]-Override</B></td>
                         <td valign="right"><B>[[ value["override"] ]] %</B></td>
                         <td><input type="range" min="0.0" max="100.0" value="value['override']" v-model="value['override']" step="1.0" class="slider" v-model="sliderVal" @change="spindleChange"></td>
                     </tr>
-
-
                 </body>
             </table>
-
 
         </td>
 
@@ -323,16 +318,22 @@ html,body,h1,h2,h3,h4,h5 {
               <button class="tablinks rtablinks" onclick="openrTab(event, 'DRO')">DRO</button>
             </div>
             <div id="Preview" class="tabcontent rtabcontent">
-                <div v-for="(value, axis) in position">
-                    [[axis]] : [[ value["pos"] ]] mm<br/>
-                </div>
+                <table>
+                    <tr v-for="(value, axis) in position">
+                        <td>[[axis]] :</td>
+                        <td width="100px" align="right">[[ value["pos"] ]] mm</td>
+                    </tr>
+                </table>
                 <br/>&nbsp;<br/>
                 {{svg_str|safe}}
             </div>
             <div id="DRO" class="tabcontent rtabcontent">
-                <div v-for="(value, axis) in position">
-                    [[axis]] : [[ value["pos"] ]] mm<br/>
-                </div>
+                <table>
+                    <tr v-for="(value, axis) in position">
+                        <td>[[axis]] :</td>
+                        <td width="100px" align="right">[[ value["pos"] ]] mm</td>
+                    </tr>
+                </table>
             </div>
         </td>
 
@@ -377,7 +378,10 @@ function w3_open() {
     }
 }
 
-// Close the sidebar with the close button
+function setMDI(from) {
+    document.getElementById("mdi_command").value = from.innerHTML;
+}
+
 function w3_close() {
     mySidebar.style.display = "none";
     overlayBg.style.display = "none";

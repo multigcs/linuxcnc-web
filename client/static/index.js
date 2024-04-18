@@ -27,8 +27,8 @@ const vm = new Vue({
 
         current_vel: 0,
 
-
-        errors: "",
+        errors: {},
+        mdi_commands: [],
 
         din: [],
         dout: [],
@@ -39,10 +39,7 @@ const vm = new Vue({
         this.fetch()
     },
 
-
-
     methods: {
-
         mdiCommand: async function () {
             command = document.getElementById("mdi_command").value;
             const gResponse = await fetch(apiEndpoint + 'mdi/' + command);
@@ -94,6 +91,7 @@ const vm = new Vue({
             this.enabled = gObject.enabled;
             this.paused = gObject.paused;
 
+            this.mdi_commands = gObject.mdi_commands;
             this.errors = gObject.errors;
             if (gObject.line_num != this.line_num) {
                 if (this.line_num != 0) {

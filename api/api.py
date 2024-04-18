@@ -14,6 +14,7 @@ e = linuxcnc.error_channel()
 tempdata = {
     "error_counter": 0,
     "errors": {},
+    "mdi_commands": [],
 }
 
 api_bp = Blueprint("api_bp", __name__)
@@ -94,6 +95,9 @@ def mdi(command):
         c.mode(linuxcnc.MODE_MDI)
         c.wait_complete()
         c.mdi(command)
+        if command not in tempdata["mdi_commands"]:
+            tempdata["mdi_commands"] = tempdata["mdi_commands"][:10]
+            tempdata["mdi_commands"].append(command)
         return "OK"
     return "FAILED"
 
@@ -136,6 +140,7 @@ def update():
         "aout": s.aout,
         "paused": s.paused,
         "errors": tempdata["errors"],
+        "mdi_commands": tempdata["mdi_commands"],
     }
     for n, pos in enumerate(s.position[:3]):
         data["position"][AXIS_NAMES[n]] = {"homed_str": "homed" if s.homed[n] else "not-homed", "homed": s.homed[n], "pos": f"{pos:0.3f}"}
