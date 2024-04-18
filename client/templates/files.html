@@ -1,20 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#files {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#files td, #files th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#files tr:nth-child(even){background-color: #f2f2f2;}
+
+#files tr:hover {background-color: #ddd;}
+
+#files th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+</head>
+<body>
+
 
 <h3>Files:</h3>
 
-<table>
+<table id="files">
     <tr>
-        <th>Size</th>
         <th>Filename</th>
+        <th width="10%">Size</th>
+        <th width="10%">Date</th>
     </tr>
     {% for file in files %}
     <tr>
-        <td>{{ files[file].size }}</td>
         <td><a href="/?filename={{ file }}">{{ files[file].name }}</td>
+        <td>{{ files[file].size }} kByte</td>
+        <td>{{ files[file].mtime }}</td>
     </tr>
     {% endfor %}
 </table>
 
-<hr />
+<br />&nbsp;
 <form action="/upload" method="post" enctype="multipart/form-data">
   <label>Upload: 
     <input name="file" type="file" size="50" accept="*"> 
@@ -22,4 +54,6 @@
   <button>send</button>
 </form>
 
+</body>
+</html>
 

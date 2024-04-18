@@ -2,6 +2,7 @@ import re
 import os
 import glob
 import time
+import datetime
 import linuxcnc
 
 from flask import Blueprint, render_template, request, redirect
@@ -30,7 +31,10 @@ def files():
     files = {}
     for filename in glob.glob(f"{UPLOAD_FOLDER}/*.ngc"):
         file_stats = os.stat(filename)
-        files[filename] = {"name": os.path.basename(filename), "size": file_stats.st_size}
+        
+        mtime = datetime.datetime.fromtimestamp(file_stats.st_mtime).strftime('%Y-%m-%d %H:%M')
+        
+        files[filename] = {"name": os.path.basename(filename), "size": file_stats.st_size, "mtime": mtime}
     return render_template("files.html", files=files)
 
 
