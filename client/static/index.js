@@ -44,10 +44,7 @@ const vm = new Vue({
     methods: {
 
         mdiCommand: async function () {
-
             command = document.getElementById("mdi_command").value;
-            console.log(command);
-
             const gResponse = await fetch(apiEndpoint + 'mdi/' + command);
             //const gObject = await gResponse.json();
             console.log(gResponse);
@@ -72,7 +69,6 @@ const vm = new Vue({
             //const gObject = await gResponse.json();
             console.log(gResponse);
         },
-
         feedrateChange: async function () {
             const gResponse = await fetch(apiEndpoint + 'feedrate/' + this.feedrate / 100.0);
             //const gObject = await gResponse.json();

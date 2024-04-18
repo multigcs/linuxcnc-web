@@ -268,32 +268,24 @@ html,body,h1,h2,h3,h4,h5 {
 
                 <div v-for="(value, axis) in position">
                     [[axis]] :
-                    
                     <button v-on:mouseup="JogStop([[axis]])" v-on:mousedown="JogStart([[axis]], -100)">-</button>
                     <button v-on:mouseup="JogStop([[axis]])" v-on:mousedown="JogStart([[axis]], 100)">+</button>
                 </div>
 
-
                 <button v-on:mousedown="doApiCall('homing/-1')">HOME ALL</button><br/>
 
                 <div v-for="(value, num) in spindle">
-
                     Spindle[[ num ]] : 
-
                     <button v-on:mousedown="SpindleRev([[num]])">↶</button>
                     <button v-on:mousedown="SpindleStart([[num]])">STOP</button>
                     <button v-on:mousedown="SpindleFfw([[num]])">↷</button>
-
                 </div>
-
-
-
 
             </div>
             <div id="MDI" class="tabcontent ltabcontent">
                 <b>MDI-Command:</b>
                 <input type="text" id="mdi_command" name="fname">
-                <button v-on:mousedown="sendMDI()">Go</button>
+                <button v-on:mousedown="mdiCommand()">Go</button>
             </div>
 
 
