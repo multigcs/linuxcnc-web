@@ -42,7 +42,7 @@ def do_auto(mode):
 
     if mode == "RUN":
         c.auto(linuxcnc.AUTO_RUN, 1)
-    elif mode == "STOP":
+    elif mode == "STEP":
         c.auto(linuxcnc.AUTO_STEP)
     elif mode == "PAUSE":
         if s.interp_state != linuxcnc.INTERP_IDLE:
@@ -50,7 +50,6 @@ def do_auto(mode):
     elif mode == "RESUME":
         c.auto(linuxcnc.AUTO_RESUME)
     elif mode == "STOP":
-        c.auto(linuxcnc.AUTO_STOP)
         c.abort()
 
     return "OK"
@@ -104,11 +103,11 @@ def update():
         tempdata["errors"][tempdata["error_counter"]] = {"time": current_time, "type": typus, "text": text}
         tempdata["error_counter"] += 1
 
-
     data = {
         "file": s.file,
         "estop": s.estop,
         "enabled": s.enabled,
+        "line_num": s.motion_line,
         "interp_state": s.interp_state,
         "task_state": s.task_state,
         "feedrate": s.feedrate,

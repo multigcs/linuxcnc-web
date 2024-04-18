@@ -124,7 +124,12 @@ def index():
     lines = "".join(svg_out)
     svg_str = f'<svg height="100%" width="100%" viewBox="0 0 {width} {height}" style="background-color:black" xmlns="http://www.w3.org/2000/svg">{lines}<circle id="position" cx="0" cy="0" r="1" _border="{border}" _height="{height}" style="fill:red;stroke:red;stroke-width:0"/></svg>'
 
-    return render_template("index.html", gcode=content.replace("\n", "<br/>"), svg_str=svg_str)
+    content_ln = []
+    for ln, line in enumerate(content.split("\n"), 1):
+        content_ln.append(f"<div id='ln{ln}'>{ln:05}: {line}</div>")
+
+
+    return render_template("index.html", gcode="".join(content_ln), svg_str=svg_str)
 
 
 @client_bp.route("/get_file")

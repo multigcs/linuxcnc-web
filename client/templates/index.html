@@ -352,8 +352,10 @@ html,body,h1,h2,h3,h4,h5 {
 <table width="100%">
     <tr>
         <td valign="top" width="70%">
-            <b>Programm:</b><br/>
-            <pre id="gcode">{{gcode|safe}}</pre>
+            <b>Programm (#[[line_num]]):</b><br/>
+            <div id="gcode">
+                <code id="gcode_code"><pre>{{gcode|safe}}</pre></code>
+            </div>
         </td>
         <td valign="top">
             <b>Errors:</b><br/>
@@ -366,39 +368,30 @@ html,body,h1,h2,h3,h4,h5 {
 
 
 
-
-  <!-- End page content -->
 </div>
 </div>
 
 <script>
-// Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");
-
-// Get the DIV with overlay effect
 var overlayBg = document.getElementById("myOverlay");
 
-// Toggle between showing and hiding the sidebar, and add overlay effect
 function w3_open() {
-  if (mySidebar.style.display === 'block') {
-    mySidebar.style.display = 'none';
-    overlayBg.style.display = "none";
-  } else {
-    mySidebar.style.display = 'block';
-    overlayBg.style.display = "block";
-  }
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
 }
 
 // Close the sidebar with the close button
 function w3_close() {
-  mySidebar.style.display = "none";
-  overlayBg.style.display = "none";
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
 }
 
-</script>
 
-
-<script>
 function openrTab(evt, cityName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("rtabcontent");
@@ -428,6 +421,7 @@ function openlTab(evt, cityName) {
 
 document.getElementById("ldefaultOpen").click();
 document.getElementById("rdefaultOpen").click();
+
 
 
 </script>

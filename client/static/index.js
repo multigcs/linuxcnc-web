@@ -10,6 +10,9 @@ const vm = new Vue({
         enabled: 0,
         paused: 0,
 
+        line_num: 0,
+        line_num_last: 0,
+
         interp_state: 0,
         task_state: 0,
         feedrate: 100.0,
@@ -23,6 +26,7 @@ const vm = new Vue({
         tool_in_spindle: 0,
 
         current_vel: 0,
+
 
         errors: "",
 
@@ -77,7 +81,6 @@ const vm = new Vue({
             }
         },
 
-
         fetch: async function() {
             const gResponse = await fetch(apiEndpoint + 'update');
             const gObject = await gResponse.json();
@@ -87,6 +90,20 @@ const vm = new Vue({
             this.paused = gObject.paused;
 
             this.errors = gObject.errors;
+            if (gObject.line_num != this.line_num) {
+                if (this.line_num != 0) {
+                    document.getElementById('ln' + this.line_num).style.color = "black";
+                }
+                this.line_num = gObject.line_num;
+                if (this.line_num != 0) {
+                    document.getElementById('ln' + this.line_num).style.color = "red";
+                    if (this.line_num > 4) {
+                        document.getElementById('ln' + (this.line_num - 4)).scrollIntoView();
+                    } else {
+                        document.getElementById('ln' + this.line_num).scrollIntoView();
+                    }
+                }
+            }
 
             this.interp_state = gObject.interp_state;
             this.task_state = gObject.task_state;
@@ -110,17 +127,12 @@ const vm = new Vue({
             this.aout = gObject.aout;
 
 
-    element = document.getElementById("position");
-    height = parseFloat(element.getAttribute("_height"));
-    border = parseFloat(element.getAttribute("_border"));
+            element = document.getElementById("position");
+            height = parseFloat(element.getAttribute("_height"));
+            border = parseFloat(element.getAttribute("_border"));
 
-    element.setAttribute("cx", parseFloat(this.position.X.pos) + border)
-    element.setAttribute("cy", height - parseFloat(this.position.Y.pos) - border)
-
-
-
-
-
+            element.setAttribute("cx", parseFloat(this.position.X.pos) + border)
+            element.setAttribute("cy", height - parseFloat(this.position.Y.pos) - border)
 
         }
     },
