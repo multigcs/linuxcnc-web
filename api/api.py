@@ -18,6 +18,10 @@ tempdata = {
 
 api_bp = Blueprint("api_bp", __name__)
 
+def ok_for_mdi():
+    s.poll()
+    return not s.estop and s.enabled and (s.homed.count(1) == s.joints) and (s.interp_state == linuxcnc.INTERP_IDLE)
+
 
 @api_bp.route("/JogStart/<axis>/<speed>")
 def do_JogStart(axis, speed):
@@ -83,6 +87,15 @@ def homing(axis):
     c.wait_complete()
     c.home(int(axis))
     return "OK"
+
+@api_bp.route("/mdi/<command>")
+def mdi(command):
+    if ok_for_mdi():
+        c.mode(linuxcnc.MODE_MDI)
+        c.wait_complete()
+        c.mdi(command)
+        return "OK"
+    return "FAILED"
 
 @api_bp.route("/update")
 def update():

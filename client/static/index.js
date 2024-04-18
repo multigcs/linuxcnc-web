@@ -43,6 +43,15 @@ const vm = new Vue({
 
     methods: {
 
+        mdiCommand: async function () {
+
+            command = document.getElementById("mdi_command").value;
+            console.log(command);
+
+            const gResponse = await fetch(apiEndpoint + 'mdi/' + command);
+            //const gObject = await gResponse.json();
+            console.log(gResponse);
+        },
         doApiCall: async function (name) {
             const gResponse = await fetch(apiEndpoint + name);
             //const gObject = await gResponse.json();
