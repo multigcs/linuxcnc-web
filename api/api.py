@@ -16,24 +16,6 @@ tempdata = {
     "errors": {},
 }
 
-print(dir(s))
-print(dir(c))
-
-
-"""
-
-c.home(0)
-c.home(1)
-c.home(2)
-
-#c.mode(linuxcnc.MODE_AUTO)
-c.program_open("/tmp/simple.ngc")
-c.reset_interpreter()
-c.auto(linuxcnc.AUTO_RUN, 0)
-
-"""
-
-
 api_bp = Blueprint("api_bp", __name__)
 
 
@@ -102,7 +84,6 @@ def homing(axis):
     c.wait_complete()
     c.home(int(axis))
     return "OK"
-
 
 @api_bp.route("/update")
 def update():
