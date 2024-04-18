@@ -1,15 +1,20 @@
 import re
 import os
+import glob
 import time
 import linuxcnc
-from flask import Blueprint, render_template
-from flask import Blueprint
+
+from flask import Blueprint, render_template, request, redirect
+
 
 COMMAND = re.compile("(?P<line>\d+) N\.* (?P<type>[A-Z_]+)\((?P<coords>.*)\)")
+ALLOWED_EXTENSIONS = {'ngc', 'ng'}
+UPLOAD_FOLDER = f"{os.path.expanduser('~')}/nc_files/"
 
 # http://linuxcnc.org/docs/master/html/de/config/python-interface.html
 
 s = linuxcnc.stat()
+c = linuxcnc.command()
 
 client_bp = Blueprint(
     "client_bp",
@@ -20,8 +25,41 @@ client_bp = Blueprint(
 )
 
 
+@client_bp.route("/files")
+def files():
+    files = {}
+    for filename in glob.glob(f"{UPLOAD_FOLDER}/*.ngc"):
+        file_stats = os.stat(filename)
+        files[filename] = {"name": os.path.basename(filename), "size": file_stats.st_size}
+    return render_template("files.html", files=files)
+
+
+@client_bp.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        filefd = request.files['file']
+        if filefd:
+            target = f"{UPLOAD_FOLDER}/{filefd.filename}"
+            print(target)
+            open(target, "wb").write(filefd.read());
+            return redirect("/files")
+    return 'No file uploaded'
+
+
+
 @client_bp.route("/")
 def index():
+    filename = request.args.get("filename")
+    if filename:
+        print(f"loading file: {filename}")
+
+        s.poll()
+        if s.task_mode != linuxcnc.MODE_AUTO:
+            c.mode(linuxcnc.MODE_AUTO)
+        c.program_open(filename)
+
+        return redirect("/")
+
 
     s.poll()
     filename = s.file

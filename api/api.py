@@ -13,10 +13,7 @@ e = linuxcnc.error_channel()
 
 tempdata = {
     "error_counter": 0,
-    "errors": {
-        0: {"time": "11:22:33", "type": "error", "text": "error in trest1"},
-        1: {"time": "11:22:44", "type": "info", "text": "error in trest2"},
-    },
+    "errors": {},
 }
 
 print(dir(s))
@@ -95,19 +92,6 @@ def do_rapidrate(rate):
 def do_spindleChange(spindle, rate):
     c.spindleoverride(float(rate), int(spindle))
     return "OK"
-
-
-@api_bp.route("/open/<filepath>")
-def do_open(filepath):
-    s.poll()
-    if s.task_mode != linuxcnc.MODE_AUTO:
-        c.mode(linuxcnc.MODE_AUTO)
-    print(filepath)
-    c.program_open("/usr/share/axis/images/axis.ngc")
-    #c.reset_interpreter()
-    return "OK"
-
-
 
 @api_bp.route("/homing/<axis>")
 def homing(axis):

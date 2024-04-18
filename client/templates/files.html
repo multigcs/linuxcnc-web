@@ -1,0 +1,25 @@
+
+<h3>Files:</h3>
+
+<table>
+    <tr>
+        <th>Size</th>
+        <th>Filename</th>
+    </tr>
+    {% for file in files %}
+    <tr>
+        <td>{{ files[file].size }}</td>
+        <td><a href="/?filename={{ file }}">{{ files[file].name }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr />
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <label>Upload: 
+    <input name="file" type="file" size="50" accept="*"> 
+  </label>  
+  <button>send</button>
+</form>
+
+

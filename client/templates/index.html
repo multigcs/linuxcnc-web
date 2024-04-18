@@ -185,7 +185,7 @@ html,body,h1,h2,h3,h4,h5 {
 }
 
 .open:after{
-    content: "O";
+    content: "🗁";
     left:12px;
     top:4px;
 }
@@ -249,7 +249,7 @@ html,body,h1,h2,h3,h4,h5 {
         <td><div href="#" v-if="!paused" v-on:mousedown="doApiCall('auto/PAUSE')" class="oo_button pause_active pause"></div><div href="#" v-if="paused" v-on:mousedown="doApiCall('auto/RESUME')" class="oo_button pause"></div></td>
         <td><div href="#" v-on:mousedown="doApiCall('auto/STOP')" class="oo_button stop_active stop"></div></td>
         <td>&nbsp;&nbsp;&nbsp;</td>
-        <td><div href="#" v-on:mousedown="doApiCall('open/test.ngc')" class="oo_button open"></div></td>
+        <td><a href="/files" class="oo_button open"></></td>
 
     </tr>
 </table>
