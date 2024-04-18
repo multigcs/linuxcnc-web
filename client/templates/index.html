@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>---</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body {
+
+    background: #EFEFEF;
+
+}
+
+html,body,h1,h2,h3,h4,h5 {
+
+    font-family: "Raleway", sans-serif;
+
+}
+
+
+#gcode{
+    height: 200px;
+    overflow: scroll;
+    
+    background-image: -webkit-linear-gradient(top, #EEEEEE, #999999);
+}
+
+         
+
+
+.oo_button{
+    background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
+    background-image: linear-gradient(top, #f4f1ee, #fff);
+    border-radius: 50%;
+    box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, .3), inset 0px 4px 1px 1px white, inset 0px -3px 1px 1px rgba(204,198,197,.5);
+    float:left;
+    margin: 0 10px 10px 0;
+    position: relative;
+    height: 50px;
+    width: 50px;
+    -webkit-transition: all .1s linear;
+    transition: all .1s linear;
+}
+
+.oo_button:after{
+    color:#e9e6e4;
+    content: "";
+    display: block;
+    font-size: 30px;
+    height: 30px;
+    text-decoration: none;
+    text-shadow: 0px -1px 1px #bdb5b4, 1px 1px 1px white;
+    position: absolute;
+    width: 30px;
+}
+
+.oo_button:hover{
+    background-image: -webkit-linear-gradient(top, #fff, #f4f1ee);
+    background-image: linear-gradient(top, #fff, #f4f1ee);
+    color:#0088cc;
+}
+
+
+.estop_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.estop_active:after{
+    color:#d23333;
+    text-shadow:0px 0px 6px #83d244;
+}
+
+.estop:after{
+    content: "✖";
+    left:12px;
+    top:8px;
+}
+
+.power_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.power_active:after{
+    color:#83d244;
+    text-shadow:0px 0px 6px #83d244;
+}
+
+.power:after{
+    content: "⏼";
+    left:12px;
+    top:4px;
+}
+
+.programm_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.programm_active:after{
+    color:#8344d2;
+    //text-shadow:0px 0px 6px #83d244;
+}
+
+.programm:after{
+    content: "⏵";
+    left:18px;
+    top:4px;
+}
+
+.step_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.step_active:after{
+    color:#8344d2;
+    //text-shadow:0px 0px 6px #83d244;
+}
+
+.step:after{
+    content: "⏭";
+    left:12px;
+    top:4px;
+}
+
+.pause_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.pause_active:after{
+    color:#8344d2;
+    //text-shadow:0px 0px 6px #83d244;
+}
+
+.pause:after{
+    content: "⏸";
+    left:12px;
+    top:4px;
+}
+
+.stop_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.stop_active:after{
+    color:#8344d2;
+    //text-shadow:0px 0px 6px #83d244;
+}
+
+.stop:after{
+    content: "⏹";
+    left:12px;
+    top:4px;
+}
+
+
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #000000;
+  background-color: #999999;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #CDCDCD;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #EFEFEF;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #000000;
+  border-top: none;
+  min-height: 300px;
+  background-color: #FFFFFF;
+}
+
+
+</style>
+</head>
+<body class="w3-light-grey">
+    
+<div id="vm">
+
+
+<table>
+    <tr>
+        <td><div href="#" v-if="!estop" v-on:mousedown="setState(1)" class="oo_button estop"></div><div href="#" v-if="estop" v-on:mousedown="setState(2)" class="oo_button estop_active estop"></div></td>
+        <td><div href="#" v-if="enabled" v-on:mousedown="setState(3)" class="oo_button power_active power"></div><div href="#" v-if="!enabled" v-on:mousedown="setState(4)" class="oo_button power"></div></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><div href="#" v-on:mousedown="doApiCall('auto/RUN')" class="oo_button programm_active programm"></div></td>
+        <td><div href="#" v-on:mousedown="doApiCall('auto/STEP')" class="oo_button step_active step"></div></td>
+
+        <td><div href="#" v-if="!paused" v-on:mousedown="doApiCall('auto/PAUSE')" class="oo_button pause_active pause"></div><div href="#" v-if="paused" v-on:mousedown="doApiCall('auto/RESUME')" class="oo_button pause"></div></td>
+
+        <td><div href="#" v-on:mousedown="doApiCall('auto/STOP')" class="oo_button stop_active stop"></div></td>
+
+
+    </tr>
+</table>
+
+
+<table width="100%">
+    <tr>
+
+        <td valign="top" width="50%">
+            <div class="tab">
+              <button id="ldefaultOpen" class="tablinks ltablinks" onclick="openlTab(event, 'ManualControl')">Manual Control</button>
+              <button class="tablinks ltablinks" onclick="openlTab(event, 'MDI')">MDI</button>
+            </div>
+            <div id="ManualControl" class="tabcontent ltabcontent ldefaultOpen">
+
+
+                <div v-for="(value, axis) in position">
+                    [[axis]] :
+                    
+                    <button v-on:mouseup="JogStop([[axis]])" v-on:mousedown="JogStart([[axis]], -100)">-</button>
+                    <button v-on:mouseup="JogStop([[axis]])" v-on:mousedown="JogStart([[axis]], 100)">+</button>
+                </div>
+
+
+                <button v-on:mousedown="doApiCall('homing/-1')">HOME ALL</button><br/>
+
+                <div v-for="(value, num) in spindle">
+
+                    Spindle[[ num ]] : 
+
+                    <button v-on:mousedown="SpindleRev([[num]])">↶</button>
+                    <button v-on:mousedown="SpindleStart([[num]])">STOP</button>
+                    <button v-on:mousedown="SpindleFfw([[num]])">↷</button>
+
+                </div>
+
+
+
+
+            </div>
+            <div id="MDI" class="tabcontent ltabcontent">
+                <b>MDI-Command:</b>
+                <input type="text" id="fname" name="fname">
+                <button v-on:mousedown="sendMDI()">Go</button>
+            </div>
+
+
+            <table>
+                <body>
+                    <tr>
+                        <td><B>Feed-Override</B></td>
+                        <td valign="right"><B>[[ feedrate ]] %</B></td>
+                        <td><input type="range" min="0.0" max="100.0" value="[[ feedrate ]]" v-model="feedrate" step="1.0" class="slider" v-model="sliderVal" @change="feedrateChange"></td>
+                    </tr>
+
+                    <tr>
+                        <td><B>Rapid-Override</B></td>
+                        <td valign="right"><B>[[ rapidrate ]] %</B></td>
+                        <td><input type="range" min="0.0" max="100.0" value="[[ rapidrate ]]" v-model="rapidrate" step="1.0" class="slider" v-model="sliderVal" @change="rapidrateChange"></td>
+                    </tr>
+
+
+                    <tr v-for="(value, num) in spindle">
+                        <td><B>Spindle[[ num ]]-Override</B></td>
+                        <td valign="right"><B>[[ value["override"] ]] %</B></td>
+                        <td><input type="range" min="0.0" max="100.0" value="value['override']" v-model="value['override']" step="1.0" class="slider" v-model="sliderVal" @change="spindleChange"></td>
+                    </tr>
+
+
+                </body>
+            </table>
+
+
+        </td>
+
+        <td valign="top">
+            <div class="tab">
+              <button id="rdefaultOpen" class="tablinks rtablinks" onclick="openrTab(event, 'Preview')">Preview</button>
+              <button class="tablinks rtablinks" onclick="openrTab(event, 'DRO')">DRO</button>
+            </div>
+            <div id="Preview" class="tabcontent rtabcontent">
+                <div v-for="(value, axis) in position">
+                    [[axis]] : [[ value["pos"] ]] mm<br/>
+                </div>
+                <br/>&nbsp;<br/>
+                {{svg_str|safe}}
+            </div>
+            <div id="DRO" class="tabcontent rtabcontent">
+                <div v-for="(value, axis) in position">
+                    [[axis]] : [[ value["pos"] ]] mm<br/>
+                </div>
+            </div>
+        </td>
+
+    </tr>
+</table>
+
+
+<div id="gcode">
+    <pre>{{gcode|safe}}
+    blaa
+    blla
+    </pre>
+</div>
+
+
+
+
+
+  <!-- End page content -->
+</div>
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+
+</script>
+
+
+<script>
+function openrTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("rtabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("rtablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+function openlTab(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("ltabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("ltablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("ldefaultOpen").click();
+document.getElementById("rdefaultOpen").click();
+
+
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script src="{{ url_for('client_bp.static', filename='index.js') }}"></script>
+
+</body>
+</html>
