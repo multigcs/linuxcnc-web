@@ -8,15 +8,22 @@
 <style>
 
 body {
-
     background: #EFEFEF;
-
 }
 
 html,body,h1,h2,h3,h4,h5 {
 
     font-family: "Raleway", sans-serif;
 
+}
+
+
+
+.error {
+    background: #EF9999;
+}
+.info {
+    background: #EFEF99;
 }
 
 
@@ -166,6 +173,24 @@ html,body,h1,h2,h3,h4,h5 {
 }
 
 
+.open_active{
+    background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
+    background-image: linear-gradient(top, #efedec, #f7f4f4);
+    box-shadow: 0 3px 5px 0 rgba(0,0,0,.4), inset 0px -3px 1px 1px rgba(204,198,197,.5);
+}
+
+.open_active:after{
+    color:#8344d2;
+    //text-shadow:0px 0px 6px #83d244;
+}
+
+.open:after{
+    content: "O";
+    left:12px;
+    top:4px;
+}
+
+
 
 /* Style the tab */
 .tab {
@@ -221,11 +246,10 @@ html,body,h1,h2,h3,h4,h5 {
         <td>&nbsp;&nbsp;&nbsp;</td>
         <td><div href="#" v-on:mousedown="doApiCall('auto/RUN')" class="oo_button programm_active programm"></div></td>
         <td><div href="#" v-on:mousedown="doApiCall('auto/STEP')" class="oo_button step_active step"></div></td>
-
         <td><div href="#" v-if="!paused" v-on:mousedown="doApiCall('auto/PAUSE')" class="oo_button pause_active pause"></div><div href="#" v-if="paused" v-on:mousedown="doApiCall('auto/RESUME')" class="oo_button pause"></div></td>
-
         <td><div href="#" v-on:mousedown="doApiCall('auto/STOP')" class="oo_button stop_active stop"></div></td>
-
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td><div href="#" v-on:mousedown="doApiCall('open/test.ngc')" class="oo_button open"></div></td>
 
     </tr>
 </table>
@@ -324,13 +348,21 @@ html,body,h1,h2,h3,h4,h5 {
 </table>
 
 
-<div id="gcode">
-    <pre>{{gcode|safe}}
-    blaa
-    blla
-    </pre>
-</div>
-
+<hr/>
+<table width="100%">
+    <tr>
+        <td valign="top" width="70%">
+            <b>Programm:</b><br/>
+            <pre id="gcode">{{gcode|safe}}</pre>
+        </td>
+        <td valign="top">
+            <b>Errors:</b><br/>
+            <div v-for="(error, num) in errors">
+                <div :class="error.type">[[ error.time ]] : [[ error.text ]] </div>
+            </div>
+        </td>
+    </tr>
+</table>
 
 
 

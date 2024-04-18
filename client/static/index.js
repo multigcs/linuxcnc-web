@@ -24,6 +24,8 @@ const vm = new Vue({
 
         current_vel: 0,
 
+        errors: "",
+
         din: [],
         dout: [],
         ain: [],
@@ -83,6 +85,8 @@ const vm = new Vue({
             this.estop = gObject.estop;
             this.enabled = gObject.enabled;
             this.paused = gObject.paused;
+
+            this.errors = gObject.errors;
 
             this.interp_state = gObject.interp_state;
             this.task_state = gObject.task_state;

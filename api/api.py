@@ -9,7 +9,15 @@ AXIS_NAMES = ["X", "Y", "Z", "A", "B", "C", "U", "V", "W"]
 
 s = linuxcnc.stat()
 c = linuxcnc.command()
+e = linuxcnc.error_channel()
 
+tempdata = {
+    "error_counter": 0,
+    "errors": {
+        0: {"time": "11:22:33", "type": "error", "text": "error in trest1"},
+        1: {"time": "11:22:44", "type": "info", "text": "error in trest2"},
+    },
+}
 
 print(dir(s))
 print(dir(c))
@@ -52,7 +60,7 @@ def do_auto(mode):
     s.poll()
     if s.task_mode != linuxcnc.MODE_AUTO:
         c.mode(linuxcnc.MODE_AUTO)
-    print(mode)
+
     if mode == "RUN":
         c.auto(linuxcnc.AUTO_RUN, 1)
     elif mode == "STOP":
@@ -64,7 +72,7 @@ def do_auto(mode):
         c.auto(linuxcnc.AUTO_RESUME)
     elif mode == "STOP":
         c.auto(linuxcnc.AUTO_STOP)
-
+        c.abort()
 
     return "OK"
 
@@ -88,6 +96,19 @@ def do_spindleChange(spindle, rate):
     c.spindleoverride(float(rate), int(spindle))
     return "OK"
 
+
+@api_bp.route("/open/<filepath>")
+def do_open(filepath):
+    s.poll()
+    if s.task_mode != linuxcnc.MODE_AUTO:
+        c.mode(linuxcnc.MODE_AUTO)
+    print(filepath)
+    c.program_open("/usr/share/axis/images/axis.ngc")
+    #c.reset_interpreter()
+    return "OK"
+
+
+
 @api_bp.route("/homing/<axis>")
 def homing(axis):
     if axis in AXIS_NAMES:
@@ -102,9 +123,22 @@ def homing(axis):
 @api_bp.route("/update")
 def update():
 
-    date = str(datetime.datetime.now())
+    now = datetime.datetime.now()
+    current_time = now.strftime("%H:%M:%S")
 
     s.poll()
+
+    error = e.poll()
+    if error:
+        kind, text = error
+        if kind in (linuxcnc.NML_ERROR, linuxcnc.OPERATOR_ERROR):
+            typus = "error"
+        else:
+            typus = "info"
+        print(tempdata["error_counter"], typus, text)
+        tempdata["errors"][tempdata["error_counter"]] = {"time": current_time, "type": typus, "text": text}
+        tempdata["error_counter"] += 1
+
 
     data = {
         "file": s.file,
@@ -124,12 +158,15 @@ def update():
         "ain": s.ain,
         "aout": s.aout,
         "paused": s.paused,
+        "errors": tempdata["errors"],
     }
     for n, pos in enumerate(s.position[:3]):
         data["position"][AXIS_NAMES[n]] = {"homed_str": "homed" if s.homed[n] else "not-homed", "homed": s.homed[n], "pos": f"{pos:0.3f}"}
 
     for n, spindle in enumerate(s.spindle[:2]):
         data["spindle"][n] = spindle
+
+
 
     #print(data)
     return data

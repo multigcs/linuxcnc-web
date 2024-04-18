@@ -25,7 +25,10 @@ def index():
 
     s.poll()
     filename = s.file
-    content = open(filename, "r").read()
+    if filename:
+        content = open(filename, "r").read()
+    else:
+        content = ""
 
     svg_out = []
     p = os.popen(f"rs274 -g '{filename}'")
@@ -125,7 +128,6 @@ def do_start():
     return "OK"
 
 
-
 @client_bp.route("/spindle")
 def do_spindle():
 
@@ -145,16 +147,8 @@ def do_homeing():
     s = linuxcnc.stat()
     c = linuxcnc.command()
 
-
     print(dir(s))
     print(dir(c))
-
-# ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'acceleration', 'active_queue', 'actual_position', 'adaptive_feed_enabled', 'ain', 'angular_units', 'aout', 'axis', 'axis_mask', 'block_delete', 'call_level', 'command', 'current_line', 'current_vel', 'cycle_time', 'debug', 'delay_left', 'din', 'distance_to_go', 'dout', 'dtg', 'echo_serial_number', 'enabled', 'estop', 'exec_state', 'feed_hold_enabled', 'feed_override_enabled', 'feedrate', 'file', 'flood', 'g5x_index', 'g5x_offset', 'g92_offset', 'gcodes', 'homed', 'ini_filename', 'inpos', 'input_timeout', 'interp_state', 'interpreter_errcode', 'joint', 'joint_actual_position', 'joint_position', 'joints', 'kinematics_type', 'limit', 'linear_units', 'lube', 'lube_level', 'max_acceleration', 'max_velocity', 'mcodes', 'misc_error', 'mist', 'motion_id', 'motion_line', 'motion_mode', 'motion_type', 'num_extrajoints', 'optional_stop', 'paused', 'pocket_prepped', 'poll', 'position', 'probe_tripped', 'probe_val', 'probed_position', 'probing', 'program_units', 'queue', 'queue_full', 'queued_mdi_commands', 'rapidrate', 'read_line', 'rotation_xy', 'settings', 'spindle', 'spindles', 'state', 'task_mode', 'task_paused', 'task_state', 'tool_from_pocket', 'tool_in_spindle', 'tool_offset', 'tool_table', 'toolinfo', 'velocity']
-# ['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', 'abort', 'auto', 'brake', 'debug', 'display_msg', 'error_msg', 'feedrate', 'flood', 'home', 'jog', 'load_tool_table', 'maxvel', 'mdi', 'mist', 'mode', 'override_limits', 'program_open', 'rapidrate', 'reset_interpreter', 'serial', 'set_adaptive_feed', 'set_analog_output', 'set_block_delete', 'set_digital_output', 'set_feed_hold', 'set_feed_override', 'set_max_limit', 'set_min_limit', 'set_optional_stop', 'set_spindle_override', 'spindle', 'spindleoverride', 'state', 'task_plan_synch', 'teleop_enable', 'text_msg', 'tool_offset', 'traj_mode', 'unhome', 'wait_complete']
-
-    #c.home(0)
-    #c.home(1)
-    #c.home(2)
 
     c.mode(linuxcnc.MODE_MANUAL)
 
