@@ -1,3 +1,4 @@
+import math
 import re
 import os
 import glob
@@ -108,7 +109,24 @@ def index():
     for line in output:
         result = COMMAND.match(line.strip())
         if result:
-            if result["type"] in {"ARC_FEED", "STRAIGHT_FEED", "STRAIGHT_TRAVERSE"}:
+            if result["type"] in {"ARC_FEED"}:
+                coords = result["coords"].split(",")
+                new_x = float(coords[0].strip()) - pos_min_x + border
+                new_y = height - (float(coords[1].strip()) - pos_min_y) - border
+                new_z = float(coords[2].strip())
+                if coords[4].strip()[0] == "-":
+                    direction = "cw"
+                else:
+                    direction = "ccw"
+                radius = round(math.dist((float(coords[0].strip()), float(coords[1].strip())), (float(coords[2].strip()), float(coords[3].strip()))), 4)
+                if last_pos:
+                    last_x, last_y, last_z = last_pos
+                    if direction == "cw":
+                        svg_out.append(f'<g stroke="red" fill="none" style="stroke:{color};stroke-width:0.1"><path d="M {last_x} {last_y} A {radius} {radius} 0 0 1 {new_x} {new_y}" /></g>')
+                    else:
+                        svg_out.append(f'<g stroke="red" fill="none" style="stroke:{color};stroke-width:0.1"><path d="M {new_x} {new_y} A {radius} {radius} 0 0 1 {last_x} {last_y}" /></g>')
+                last_pos = (new_x, new_y, new_z)
+            elif result["type"] in {"STRAIGHT_FEED", "STRAIGHT_TRAVERSE"}:
                 coords = result["coords"].split(",")
                 new_x = float(coords[0].strip()) - pos_min_x + border
                 new_y = height - (float(coords[1].strip()) - pos_min_y) - border
